@@ -2,7 +2,7 @@
 
 Developed by **Mohit Ranjan**.
 
-> A full-stack resume parsing application inspired by [pyresparser](https://github.com/OmkarPathak/pyresparser), built with **FastAPI**, **spaCy**, **NLTK**, and **Google Gemini AI**.
+> A full-stack resume parsing application built with **FastAPI**, **spaCy**, **NLTK**, and **Google Gemini AI**.
 
 ---
 
@@ -221,4 +221,3 @@ print(data["skills"])
 ## 📜 License
 
 Copyright (c) 2026 Mohit Ranjan. Licensed under the MIT License.
-Built with inspiration from [pyresparser](https://github.com/OmkarPathak/pyresparser) by Omkar Pathak.
