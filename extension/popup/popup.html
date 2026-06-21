@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResumeAI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+
+  <!-- ─── Header ─── -->
+  <header class="header">
+    <div class="logo">
+      <span class="logo-icon">⚡</span>
+      <span class="logo-text">ResumeAI</span>
+    </div>
+    <div id="server-status" class="status-pill status-checking">
+      <span class="status-dot"></span>
+      <span id="status-label">Connecting…</span>
+    </div>
+  </header>
+
+  <!-- ─── Site Banner ─── -->
+  <div id="site-banner" class="site-banner hidden">
+    <span id="site-icon">🌐</span>
+    <span id="site-name">Generic Page</span>
+    <span class="site-badge">Detected</span>
+  </div>
+
+  <!-- ─── Idle State ─── -->
+  <div id="idle-state" class="idle-state">
+    <div class="idle-icon">📄</div>
+    <p class="idle-title">Navigate to a profile</p>
+    <p class="idle-desc">Go to a LinkedIn, Naukri, or Indeed profile page, then click Parse.</p>
+  </div>
+
+  <!-- ─── Results ─── -->
+  <div id="results-state" class="results-state hidden">
+
+    <!-- Summary row -->
+    <div class="summary-row" id="summary-row"></div>
+
+    <!-- Skills -->
+    <div class="section">
+      <div class="section-header">
+        <span class="section-icon">🛠️</span>
+        <span class="section-title">Skills</span>
+        <span id="skills-count" class="section-badge">0</span>
+      </div>
+      <div id="skills-chips" class="chips-container"></div>
+    </div>
+
+    <!-- Education -->
+    <div class="section" id="edu-section">
+      <div class="section-header">
+        <span class="section-icon">🎓</span>
+        <span class="section-title">Education</span>
+      </div>
+      <div id="edu-list" class="list-container"></div>
+    </div>
+
+    <!-- Experience -->
+    <div class="section" id="exp-section">
+      <div class="section-header">
+        <span class="section-icon">💼</span>
+        <span class="section-title">Experience</span>
+        <span id="exp-years" class="section-badge exp-badge"></span>
+      </div>
+      <div id="exp-list" class="list-container"></div>
+    </div>
+
+    <!-- Links -->
+    <div class="section" id="links-section">
+      <div class="section-header">
+        <span class="section-icon">🔗</span>
+        <span class="section-title">Links</span>
+      </div>
+      <div id="links-list" class="links-container"></div>
+    </div>
+
+    <!-- Certifications -->
+    <div class="section" id="cert-section">
+      <div class="section-header">
+        <span class="section-icon">🏆</span>
+        <span class="section-title">Certifications</span>
+      </div>
+      <div id="cert-list" class="cert-container"></div>
+    </div>
+
+  </div>
+
+  <!-- ─── Loading Overlay ─── -->
+  <div id="loading-overlay" class="loading-overlay hidden">
+    <div class="loading-content">
+      <div class="loading-spinner"></div>
+      <p id="loading-text" class="loading-text">Scraping page…</p>
+      <p class="loading-sub">Powered by spaCy + NLTK</p>
+    </div>
+  </div>
+
+  <!-- ─── Error State ─── -->
+  <div id="error-banner" class="error-banner hidden">
+    <span class="error-icon">⚠️</span>
+    <span id="error-text"></span>
+  </div>
+
+  <!-- ─── Footer Actions ─── -->
+  <footer class="footer">
+    <button id="parse-btn" class="btn btn-primary" disabled>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      Parse This Page
+    </button>
+    <div class="footer-secondary">
+      <button id="copy-btn" class="btn btn-ghost hidden" title="Copy JSON">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        Copy JSON
+      </button>
+      <button id="dashboard-btn" class="btn btn-ghost" title="Open Dashboard">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          <polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+        Dashboard
+      </button>
+      <button id="reset-btn" class="btn btn-ghost hidden">↩ Reset</button>
+    </div>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>
