@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "ResumeAI — Resume Parser",
+  "version": "1.0.0",
+  "description": "Parse resumes and LinkedIn profiles instantly using AI. Extracts name, skills, experience, education and more.",
+
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "ResumeAI — Parse This Page",
+    "default_icon": {
+      "16":  "icons/icon16.png",
+      "48":  "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+
+  "icons": {
+    "16":  "icons/icon16.png",
+    "48":  "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "http://localhost:8000/*",
+    "http://127.0.0.1:8000/*",
+    "https://www.linkedin.com/*",
+    "https://linkedin.com/*",
+    "https://www.naukri.com/*",
+    "https://www.indeed.com/*",
+    "https://in.indeed.com/*",
+    "https://www.glassdoor.com/*",
+    "https://www.monster.com/*"
+  ],
+
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.linkedin.com/in/*",
+        "https://www.naukri.com/*",
+        "https://www.indeed.com/resume/*",
+        "https://in.indeed.com/resume/*"
+      ],
+      "js": ["content/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "background": {
+    "service_worker": "background/service_worker.js",
+    "type": "module"
+  },
+
+  "web_accessible_resources": [
+    {
+      "resources": ["popup/*", "icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
