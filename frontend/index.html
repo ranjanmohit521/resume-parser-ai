@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResumeAI — Intelligent Resume Parser</title>
+  <meta name="description" content="AI-powered resume parser that extracts name, email, skills, education, and work experience from PDF, DOCX, TXT, and image files." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ─── Animated Background ─── -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- ─── Header ─── -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-icon">⚡</span>
+        <span class="logo-text">ResumeAI</span>
+        <span class="logo-badge">v1.0</span>
+      </div>
+      <nav class="nav-pills">
+        <a href="#upload-section" class="nav-pill active">Parse</a>
+        <a href="http://localhost:8000/docs" target="_blank" class="nav-pill">API Docs</a>
+        <a href="#about" class="nav-pill">About</a>
+      </nav>
+      <div id="gemini-badge" class="gemini-badge hidden">
+        <span class="gemini-dot"></span>
+        Gemini AI Active
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── Hero ─── -->
+  <section class="hero">
+    <div class="hero-content">
+      <div class="hero-tag">NLP · spaCy · Gemini AI</div>
+      <h1 class="hero-title">
+        Parse Resumes<br />
+        <span class="gradient-text">Instantly & Intelligently</span>
+      </h1>
+      <p class="hero-desc">
+        Upload any resume — PDF, Word, TXT, or image — and extract structured data in seconds.
+        Powered by spaCy NER, NLTK, and Google Gemini AI.
+      </p>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">10+</span><span class="stat-label">Fields Extracted</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Skills Detected</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-num">4</span><span class="stat-label">File Formats</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="code-card">
+        <div class="code-card-header">
+          <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+          <span class="code-card-title">extracted_data.json</span>
+        </div>
+        <pre class="code-preview"><code id="hero-code">{
+  <span class="json-key">"name"</span>: <span class="json-str">"Ranjay Kumar"</span>,
+  <span class="json-key">"email"</span>: <span class="json-str">"ranjay@example.com"</span>,
+  <span class="json-key">"skills"</span>: [
+    <span class="json-str">"Python"</span>, <span class="json-str">"Machine Learning"</span>,
+    <span class="json-str">"React"</span>, <span class="json-str">"FastAPI"</span>
+  ],
+  <span class="json-key">"experience"</span>: {
+    <span class="json-key">"total_years"</span>: <span class="json-num">3.5</span>,
+    <span class="json-key">"companies"</span>: [<span class="json-str">"Google"</span>]
+  }
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Upload Section ─── -->
+  <section id="upload-section" class="upload-section">
+    <div class="section-container">
+
+      <!-- Format Badges -->
+      <div class="format-badges">
+        <div class="format-badge">📄 PDF</div>
+        <div class="format-badge">📝 DOCX</div>
+        <div class="format-badge">📋 TXT</div>
+        <div class="format-badge">🖼️ JPG / PNG</div>
+      </div>
+
+      <!-- Drop Zone -->
+      <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Upload resume file">
+        <div class="drop-zone-inner">
+          <div class="drop-icon">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="17 8 12 3 7 8"/>
+              <line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <p class="drop-title">Drop your resume here</p>
+          <p class="drop-subtitle">or <span class="drop-link" id="browse-trigger">browse to upload</span></p>
+          <p class="drop-hint">PDF · DOCX · TXT · JPG · PNG — max 10 MB</p>
+        </div>
+        <input type="file" id="file-input" accept=".pdf,.docx,.txt,.jpg,.jpeg,.png,.bmp,.tiff" hidden />
+      </div>
+
+      <!-- Selected file info -->
+      <div id="file-info" class="file-info hidden">
+        <div class="file-info-icon">📎</div>
+        <div class="file-info-details">
+          <span id="file-name" class="file-name"></span>
+          <span id="file-size" class="file-size"></span>
+        </div>
+        <button id="remove-file" class="remove-btn" aria-label="Remove file">✕</button>
+      </div>
+
+      <!-- Parse Button -->
+      <button id="parse-btn" class="parse-btn" disabled>
+        <span class="parse-btn-text">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          Parse Resume
+        </span>
+        <span class="parse-btn-loader hidden">
+          <span class="spinner"></span>
+          Parsing…
+        </span>
+      </button>
+
+    </div>
+  </section>
+
+  <!-- ─── Results Section ─── -->
+  <section id="results-section" class="results-section hidden">
+    <div class="section-container">
+
+      <div class="results-header">
+        <h2 class="results-title">
+          <span class="title-icon">✨</span>
+          Extracted Data
+          <span id="gemini-tag" class="gemini-result-tag hidden">Gemini Enhanced</span>
+        </h2>
+        <div class="results-actions">
+          <button id="copy-btn" class="action-btn secondary-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+            </svg>
+            Copy JSON
+          </button>
+          <button id="download-btn" class="action-btn primary-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+              <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            Download JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary Cards Row -->
+      <div class="summary-cards" id="summary-cards"></div>
+
+      <!-- Detail Grid -->
+      <div class="details-grid" id="details-grid"></div>
+
+      <!-- Raw JSON Viewer -->
+      <div class="json-viewer-section">
+        <button class="json-toggle" id="json-toggle">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+          </svg>
+          View Raw JSON
+          <span class="toggle-arrow" id="toggle-arrow">▼</span>
+        </button>
+        <div class="json-viewer hidden" id="json-viewer">
+          <pre id="json-output"></pre>
+        </div>
+      </div>
+
+      <!-- Parse Another -->
+      <div class="parse-again-container">
+        <button id="parse-again-btn" class="parse-again-btn">
+          ↩ Parse Another Resume
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ─── Error Toast ─── -->
+  <div id="error-toast" class="error-toast hidden">
+    <span class="toast-icon">⚠️</span>
+    <span id="error-message"></span>
+    <button id="close-toast" class="close-toast">✕</button>
+  </div>
+
+  <!-- ─── About Section ─── -->
+  <section id="about" class="about-section">
+    <div class="section-container">
+      <h2 class="about-title">How It Works</h2>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-num">01</div>
+          <div class="step-icon">📤</div>
+          <h3>Upload</h3>
+          <p>Drag & drop or browse your resume in PDF, DOCX, TXT, or image format.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">02</div>
+          <div class="step-icon">🧠</div>
+          <h3>Analyze</h3>
+          <p>spaCy NER and NLTK extract entities. Gemini AI fills any gaps intelligently.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">03</div>
+          <div class="step-icon">📊</div>
+          <h3>Results</h3>
+          <p>View structured data in beautiful cards or export as clean JSON.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-num">04</div>
+          <div class="step-icon">🔌</div>
+          <h3>API Access</h3>
+          <p>Use the REST API directly in your applications. Full Swagger docs available.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── Footer ─── -->
+  <footer class="footer">
+    <p>Built with ❤️ using <strong>FastAPI</strong> · <strong>spaCy</strong> · <strong>NLTK</strong> · <strong>Gemini AI</strong></p>
+    <p class="footer-sub">Inspired by <a href="https://github.com/OmkarPathak/pyresparser" target="_blank">pyresparser</a></p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
